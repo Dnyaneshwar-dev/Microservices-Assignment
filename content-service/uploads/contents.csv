@@ -1,25 +1,4 @@
-type,amount,date_of_transfer,beneficiary_name,beneficiary_account,owner,owner_account,ifsc_code,value
-N,0,15-January-2022,Prathmesh Killedar,85749685967,ranjeet@freshexpress.in,167010200004367,NAND0005241,10
-N,0,15-January-2022,Satish Wakde,85749685967,ranjeet@freshexpress.in,167010200004367,NAND0005241,10
-N,0,15-January-2022,Sankket sonawane,85749685967,ranjeet@freshexpress.in,167010200004367,NAND0005241,10
-N,0,15-January-2022,Vinayak Mali,85749685967,ranjeet@freshexpress.in,167010200004367,NAND0005241,10
-N,0,15-January-2022,Prathmesh Killedar,85749685967,ranjeet@freshexpress.in,167010200004367,NAND0005241,10
-N,0,15-January-2022,Sarika Shinde,85749685967,ranjeet@freshexpress.in,167010200004367,NAND0005241,10
-N,0,15-January-2022,Shikhar Raj,85749685967,ranjeet@freshexpress.in,167010200004367,NAND0005241,10
-N,0,15-January-2022,Prathmesh Nale,85749685967,ranjeet@freshexpress.in,167010200004367,NAND0005241,10
-N,0,15-January-2022,Satish Wakde,85749685967,ranjeet@freshexpress.in,167010200004367,NAND0005241,10
-N,0,15-January-2022,Amaan Shaikh,85749685967,ranjeet@freshexpress.in,167010200004367,NAND0005241,10
-N,500,15-January-2022,Dnyaneshwar Ware,85749685967,ranjeet@freshexpress.in,167010200004367,NAND0005241,10
-N,0,15-January-2022,Arpit Deshmukh,85749685967,ranjeet@freshexpress.in,167010200004367,NAND0005241,10
-N,0,15-January-2022,Ajay Varpe,85749685967,ranjeet@freshexpress.in,167010200004367,NAND0005241,10
-N,0,15-January-2022,Alfaz Shaikh,857496859458,ranjeet@freshexpress.in,167010200004367,NAND0005241,10
-N,0,15-January-2022,Rutikesh Sawant,85749685967,ranjeet@freshexpress.in,167010200004367,NAND0005241,10
-N,0,15-January-2022,Vinayak Mali,85749685967,ranjeet@freshexpress.in,167010200004367,NAND0005241,10
-N,0,15-January-2022,Radhika Apte,85749685967,ranjeet@freshexpress.in,167010200004367,NAND0005241,10
-N,0,15-January-2022,Sanjay Rathod,85749685967,ranjeet@freshexpress.in,167010200004367,NAND0005241,10
-N,0,15-January-2022,Nirmal Raj,85749685967,ranjeet@freshexpress.in,167010200004367,NAND0005241,10
-N,2085,15-January-2022,Anita Shinde,85748596784,ranjeet@freshexpress.in,167010200004367,ABC005,10
-N,0,15-January-2022,Rohit Ware,85748596784,ranjeet@freshexpress.in,167010200004367,ABC005,10
-N,0,15-January-2022,Radhika Apte,85749685967,ranjeet@freshexpress.in,167010200004367,NAND0005241,10
-N,0,15-January-2022,Sanjay Rathod,85749685967,ranjeet@freshexpress.in,167010200004367,NAND0005241,10
-N,0,15-January-2022,Nirmal Raj,85749685967,ranjeet@freshexpress.in,167010200004367,NAND0005241,10
+﻿userid,title,story,published_date
+dnyaneshwar@domain.com,Do Epic Shit,Loream Epsum 2,19-01-2022
+dnyaneshwar@domain.com,The Alchemist,The book to explore things,19-01-2022
+dnyaneshwar@domain.com,The Old Stories,The story Book,19-01-2022

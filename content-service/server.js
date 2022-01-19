@@ -28,6 +28,7 @@ app.use(express.json());
 
 const PORT = process.env.PORT || 5000;
 
+// posting content
 app.post("/books/new", async (req, res) => {
   const { title, story, userid, published_date } = req.body;
 
@@ -53,9 +54,6 @@ app.post("/books/new", async (req, res) => {
 });
 
 app.post("/books/newupload", upload.single("file"), async (req, res) => {
-  console.log(req.file);
-  const { title, story, userid, published_date } = req.body;
-
   const filePath = path.join(__dirname, "/uploads/contents.csv");
 
   const jsonData = await csv().fromFile(filePath);
@@ -63,17 +61,12 @@ app.post("/books/newupload", upload.single("file"), async (req, res) => {
   const Content = db.model("content", contentSchema);
   try {
     for (let index = 0; index < jsonData.length; index++) {
-      const data = new Content({
-        title: title,
-        story: story,
-        userid: userid,
-        published_date: published_date,
-      });
+      const data = new Content(jsonData[index]);
       const result = await data.save();
     }
     res.json({
       ok: true,
-      message: "Content added successfully",
+      message: "Contents added successfully",
     });
   } catch (error) {
     res.json({
@@ -82,6 +75,8 @@ app.post("/books/newupload", upload.single("file"), async (req, res) => {
     });
   }
 });
+
+// getting contents
 
 app.listen(PORT, () => {
   console.log(`served started at port ${PORT}`);

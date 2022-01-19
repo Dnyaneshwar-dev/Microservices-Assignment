@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const reactionSchema = new mongoose.Schema({
+const interactionSchema = new mongoose.Schema({
   contentid: {
     type: String,
     required: true,
@@ -12,4 +12,4 @@ const reactionSchema = new mongoose.Schema({
   },
 });
 
-module.exports = { reactionSchema };
+module.exports = { interactionSchema };

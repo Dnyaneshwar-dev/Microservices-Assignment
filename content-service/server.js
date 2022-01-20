@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const multer = require("multer");
 const csv = require("csvtojson");
 const path = require("path");
+const moment = require("moment");
 
 const storage = multer.diskStorage({
   destination(req, file, cb) {
@@ -30,7 +31,8 @@ const PORT = process.env.PORT || 5000;
 
 // posting content
 app.post("/books/new", async (req, res) => {
-  const { title, story, userid, published_date } = req.body;
+  var { title, story, userid, published_date } = req.body;
+  published_date = moment(published_date);
 
   const Content = db.model("content", contentSchema);
   try {
@@ -76,7 +78,25 @@ app.post("/books/newupload", upload.single("file"), async (req, res) => {
   }
 });
 
-// getting contents
+// content sorted by date
+app.get("/content/recent", async (req, res) => {
+  const { contentid } = req.body;
+  const content = db.model("content", contentSchema);
+  try {
+    const data = await content.find().sort({ published_date: -1 });
+    res.send({
+      ok: true,
+      message: "Content added successfully",
+      data: data,
+    });
+  } catch (error) {
+    console.log(error);
+    res.send({
+      ok: false,
+      error: error,
+    });
+  }
+});
 
 app.listen(PORT, () => {
   console.log(`served started at port ${PORT}`);

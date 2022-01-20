@@ -8,9 +8,8 @@ const contentSchema = new mongoose.Schema({
     },
   },
   published_date: {
-    type: String,
+    type: Date,
     required: true,
-    minlength: 1,
   },
   userid: {
     type: String,

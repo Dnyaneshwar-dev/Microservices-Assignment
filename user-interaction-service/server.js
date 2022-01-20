@@ -63,6 +63,44 @@ app.post("/content/read", async (req, res) => {
   }
 });
 
+// most read content
+app.get("/content/mostread", async (req, res) => {
+  const { contentid } = req.body;
+  const interactions = db.model("interactions", interactionSchema);
+  try {
+    const data = await interactions.find().sort({ reads: -1 });
+    res.json({
+      ok: true,
+      message: "content added successfully",
+      data: data,
+    });
+  } catch (error) {
+    res.json({
+      ok: false,
+      message: error,
+    });
+  }
+});
+
+// most liked content
+app.get("/content/mostliked", async (req, res) => {
+  const { contentid } = req.body;
+  const interactions = db.model("interactions", interactionSchema);
+  try {
+    const data = await interactions.find().sort({ likes: -1 });
+    res.json({
+      ok: true,
+      message: "content added successfully",
+      data: data,
+    });
+  } catch (error) {
+    res.json({
+      ok: false,
+      message: error,
+    });
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`Server Started at port ${PORT}`);
 });

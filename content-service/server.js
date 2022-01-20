@@ -5,6 +5,7 @@ const multer = require("multer");
 const csv = require("csvtojson");
 const path = require("path");
 const moment = require("moment");
+const axios = require("axios");
 
 const storage = multer.diskStorage({
   destination(req, file, cb) {
@@ -32,7 +33,7 @@ const PORT = process.env.PORT || 5000;
 // posting content
 app.post("/books/new", async (req, res) => {
   var { title, story, userid, published_date } = req.body;
-  published_date = moment(published_date);
+  published_date = new Date(published_date);
 
   const Content = db.model("content", contentSchema);
   try {
@@ -63,7 +64,10 @@ app.post("/books/newupload", upload.single("file"), async (req, res) => {
   const Content = db.model("content", contentSchema);
   try {
     for (let index = 0; index < jsonData.length; index++) {
+      jsonData[index].published_date = new Date(jsonData[index].published_date);
+
       const data = new Content(jsonData[index]);
+
       const result = await data.save();
     }
     res.json({
@@ -80,7 +84,6 @@ app.post("/books/newupload", upload.single("file"), async (req, res) => {
 
 // content sorted by date
 app.get("/content/recent", async (req, res) => {
-  const { contentid } = req.body;
   const content = db.model("content", contentSchema);
   try {
     const data = await content.find().sort({ published_date: -1 });
@@ -88,6 +91,71 @@ app.get("/content/recent", async (req, res) => {
       ok: true,
       message: "Content added successfully",
       data: data,
+    });
+  } catch (error) {
+    console.log(error);
+    res.send({
+      ok: false,
+      error: error,
+    });
+  }
+});
+
+app.get("/content/mostliked", async (req, res) => {
+  const content = db.model("content", contentSchema);
+  try {
+    const response = await axios.get("http://localhost:6000/content/mostliked");
+    const data = response.data.data;
+    var mostLikedContent = [];
+    var contentids = [];
+    for (let index = 0; index < data.length; index++) {
+      mostLikedContent.push(
+        await content.findOne({ contentid: data[index].contentid })
+      );
+      contentids.push(data[index].contentid);
+    }
+
+    const otherContent = await content
+      .find({
+        contentid: { $nin: [...contentids] },
+      })
+      .sort({ published_date: -1 });
+    res.send({
+      ok: true,
+      data: mostLikedContent.concat(otherContent),
+    });
+  } catch (error) {
+    console.log(error);
+    res.send({
+      ok: false,
+      error: error,
+    });
+  }
+});
+
+// most read content
+app.get("/content/mostread", async (req, res) => {
+  const content = db.model("content", contentSchema);
+  try {
+    const response = await axios.get("http://localhost:6000/content/mostread");
+    const data = response.data.data;
+    var mostReadContent = [];
+    var contentids = [];
+    for (let index = 0; index < data.length; index++) {
+      mostReadContent.push(
+        await content.findOne({ contentid: data[index].contentid })
+      );
+      contentids.push(data[index].contentid);
+    }
+
+    const otherContent = await content
+      .find({
+        contentid: { $nin: [...contentids] },
+      })
+      .sort({ published_date: -1 });
+    res.send({
+      ok: true,
+      data: mostReadContent.concat(otherContent),
     });
   } catch (error) {
     console.log(error);

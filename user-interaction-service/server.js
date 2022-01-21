@@ -2,6 +2,7 @@ require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
 const { interactionSchema } = require("./schema/interactions");
+const { checkAuth } = require("./middlewares/auth");
 
 const db = mongoose.createConnection(process.env.DATABASE_URL, {
   useNewUrlParser: true,
@@ -15,7 +16,7 @@ app.use(express.json());
 const PORT = process.env.PORT || 6000;
 
 // Like event by user
-app.post("/content/like", async (req, res) => {
+app.post("/content/like", checkAuth, async (req, res) => {
   const { contentid } = req.body;
   const interactions = db.model("interactions", interactionSchema);
   try {
@@ -39,7 +40,7 @@ app.post("/content/like", async (req, res) => {
   }
 });
 
-app.post("/content/read", async (req, res) => {
+app.post("/content/read", checkAuth, async (req, res) => {
   const { contentid } = req.body;
   const interactions = db.model("interactions", interactionSchema);
   try {

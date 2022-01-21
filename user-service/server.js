@@ -3,7 +3,9 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 const { useSchema } = require("./schema/user.js");
+const { checkAuth } = require("./middlewares/auth");
 
 const app = express();
 const db = mongoose.createConnection(process.env.DATABASE_URL, {
@@ -52,7 +54,7 @@ app.post("/users/new", async (req, res) => {
   }
 });
 
-app.put("/users/update", async (req, res) => {
+app.put("/users/update", checkAuth, async (req, res, next) => {
   const userData = req.body;
   const User = db.model("users", useSchema);
 
@@ -119,6 +121,8 @@ app.post("/users/login", async (req, res) => {
     } else {
       const result = await bcrypt.compare(password, userData.password);
       if (result) {
+        const token = await jwt.sign({ user: email }, process.env.SECRET_KEY);
+        res.cookie("authtoken", token);
         res.send({
           ok: true,
           message: "Login Successfull",
@@ -137,6 +141,13 @@ app.post("/users/login", async (req, res) => {
       message: error,
     });
   }
+});
+
+app.post("/users/auth", checkAuth, async (req, res) => {
+  res.send({
+    ok: true,
+    message: "Login Verified",
+  });
 });
 
 app.listen(PORT, () => {

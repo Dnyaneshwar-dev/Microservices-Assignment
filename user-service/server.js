@@ -2,6 +2,7 @@ require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser");
+const bcrypt = require("bcrypt");
 const { useSchema } = require("./schema/user.js");
 
 const app = express();
@@ -19,7 +20,7 @@ const PORT = process.env.PORT || 7000;
 app.post("/users/new", async (req, res) => {
   const { firstname, lastname, email, phone, password } = req.body;
   const User = db.model("users", useSchema);
-
+  const hashPassword = await bcrypt.hash(password, 10);
   try {
     const presentUser = await User.findOne({ email: email });
     if (presentUser) {
@@ -34,7 +35,7 @@ app.post("/users/new", async (req, res) => {
         lastname: lastname,
         email: email,
         phone: phone,
-        password: password,
+        password: hashPassword,
       });
 
       await newUser.save();
@@ -46,7 +47,7 @@ app.post("/users/new", async (req, res) => {
   } catch (error) {
     res.send({
       ok: false,
-      error: error,
+      message: error,
     });
   }
 });
@@ -56,13 +57,14 @@ app.put("/users/update", async (req, res) => {
   const User = db.model("users", useSchema);
 
   try {
-    const presentUser = await User.findOne({ email: userData.email }, userData);
+    const presentUser = await User.findOne({ email: userData.email });
     if (!presentUser) {
       res.send({
         ok: false,
         message: "User with given email doesn't exist",
       });
     } else {
+      userData.password = await bcrypt.hash(userData.password, 10);
       await User.updateOne({ email: userData.email }, userData);
       res.send({
         ok: true,
@@ -73,25 +75,24 @@ app.put("/users/update", async (req, res) => {
     console.log(error);
     res.send({
       ok: false,
-      error: error,
+      message: error,
     });
   }
 });
 
 app.delete("/users/delete", async (req, res) => {
-  console.log(req.cookies);
-  const userData = req.body;
+  var userData = req.body;
   const User = db.model("users", useSchema);
 
   try {
-    const presentUser = await User.findOne({ email: userData.email }, userData);
+    const presentUser = await User.findOne({ email: userData.email });
     if (!presentUser) {
       res.send({
         ok: false,
         message: "User with given email doesn't exist",
       });
     } else {
-      await User.deleteOne({ email: userData.email }, userData);
+      await User.deleteOne({ email: userData.email });
       res.send({
         ok: true,
         message: "User deleted successfully",
@@ -101,6 +102,39 @@ app.delete("/users/delete", async (req, res) => {
     res.send({
       ok: false,
       error: error,
+    });
+  }
+});
+
+app.post("/users/login", async (req, res) => {
+  const { email, password } = req.body;
+  const User = db.model("users", useSchema);
+  try {
+    const userData = await User.findOne({ email: email });
+    if (!userData) {
+      res.send({
+        ok: false,
+        message: "User with given email doesn't exist",
+      });
+    } else {
+      const result = await bcrypt.compare(password, userData.password);
+      if (result) {
+        res.send({
+          ok: true,
+          message: "Login Successfull",
+        });
+      } else {
+        res.send({
+          ok: false,
+          message: "Invalid Email or password",
+        });
+      }
+    }
+  } catch (error) {
+    console.log(error);
+    res.send({
+      ok: false,
+      message: error,
     });
   }
 });

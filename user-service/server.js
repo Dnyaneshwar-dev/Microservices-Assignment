@@ -4,7 +4,7 @@ const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const { useSchema } = require("./schema/user.js");
+const { userSchema } = require("./schema/user.js");
 const { checkAuth } = require("./middlewares/auth");
 
 const app = express();
@@ -21,7 +21,7 @@ const PORT = process.env.PORT || 7000;
 
 app.post("/users/new", async (req, res) => {
   const { firstname, lastname, email, phone, password } = req.body;
-  const User = db.model("users", useSchema);
+  const User = db.model("users", userSchema);
   const hashPassword = await bcrypt.hash(password, 10);
   try {
     const presentUser = await User.findOne({ email: email });
@@ -56,7 +56,7 @@ app.post("/users/new", async (req, res) => {
 
 app.put("/users/update", checkAuth, async (req, res, next) => {
   const userData = req.body;
-  const User = db.model("users", useSchema);
+  const User = db.model("users", userSchema);
 
   try {
     const presentUser = await User.findOne({ email: userData.email });
@@ -84,7 +84,7 @@ app.put("/users/update", checkAuth, async (req, res, next) => {
 
 app.delete("/users/delete", async (req, res) => {
   var userData = req.body;
-  const User = db.model("users", useSchema);
+  const User = db.model("users", userSchema);
 
   try {
     const presentUser = await User.findOne({ email: userData.email });
@@ -110,7 +110,7 @@ app.delete("/users/delete", async (req, res) => {
 
 app.post("/users/login", async (req, res) => {
   const { email, password } = req.body;
-  const User = db.model("users", useSchema);
+  const User = db.model("users", userSchema);
   try {
     const userData = await User.findOne({ email: email });
     if (!userData) {

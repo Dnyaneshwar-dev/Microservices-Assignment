@@ -19,7 +19,7 @@ app.use(cookieParser());
 const PORT = process.env.PORT || 6000;
 
 // Like event by user
-app.post("/content/like", checkAuth, async (req, res) => {
+app.post("/content/like", async (req, res) => {
   const { contentid } = req.body;
   const interactions = db.model("interactions", interactionSchema);
   try {
@@ -43,7 +43,7 @@ app.post("/content/like", checkAuth, async (req, res) => {
   }
 });
 
-app.post("/content/read", checkAuth, async (req, res) => {
+app.post("/content/read", async (req, res) => {
   const { contentid } = req.body;
   const interactions = db.model("interactions", interactionSchema);
   try {

@@ -4,7 +4,6 @@ const mongoose = require("mongoose");
 const multer = require("multer");
 const csv = require("csvtojson");
 const path = require("path");
-const moment = require("moment");
 const axios = require("axios");
 
 const storage = multer.diskStorage({
@@ -31,7 +30,7 @@ app.use(express.json());
 const PORT = process.env.PORT || 5000;
 
 // posting content
-app.post("/books/new", async (req, res) => {
+app.post("/content/new", async (req, res) => {
   var { title, story, userid, published_date } = req.body;
   published_date = new Date(published_date);
 
@@ -56,7 +55,7 @@ app.post("/books/new", async (req, res) => {
   }
 });
 
-app.post("/books/newupload", upload.single("file"), async (req, res) => {
+app.post("/content/newupload", upload.single("file"), async (req, res) => {
   const filePath = path.join(__dirname, "/uploads/contents.csv");
 
   const jsonData = await csv().fromFile(filePath);
@@ -109,9 +108,10 @@ app.get("/content/mostliked", async (req, res) => {
     var mostLikedContent = [];
     var contentids = [];
     for (let index = 0; index < data.length; index++) {
-      mostLikedContent.push(
-        await content.findOne({ contentid: data[index].contentid })
-      );
+      const contentData = await content.findOne({
+        contentid: data[index].contentid,
+      });
+      if (contentData != null) mostLikedContent.push(contentData);
       contentids.push(data[index].contentid);
     }
 
@@ -142,9 +142,10 @@ app.get("/content/mostread", async (req, res) => {
     var mostReadContent = [];
     var contentids = [];
     for (let index = 0; index < data.length; index++) {
-      mostReadContent.push(
-        await content.findOne({ contentid: data[index].contentid })
-      );
+      const contentData = await content.findOne({
+        contentid: data[index].contentid,
+      });
+      if (contentData != null) mostReadContent.push(contentData);
       contentids.push(data[index].contentid);
     }
 

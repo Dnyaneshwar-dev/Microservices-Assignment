@@ -103,7 +103,9 @@ app.get("/content/recent", async (req, res) => {
 app.get("/content/mostliked", async (req, res) => {
   const content = db.model("content", contentSchema);
   try {
-    const response = await axios.get("http://localhost:6000/content/mostliked");
+    const response = await axios.get(
+      "http://user-interaction-service:6000/content/mostliked"
+    );
     const data = response.data.data;
     var mostLikedContent = [];
     var contentids = [];
@@ -137,7 +139,9 @@ app.get("/content/mostliked", async (req, res) => {
 app.get("/content/mostread", async (req, res) => {
   const content = db.model("content", contentSchema);
   try {
-    const response = await axios.get("http://localhost:6000/content/mostread");
+    const response = await axios.get(
+      "http://user-interaction-service:6000/content/mostread"
+    );
     const data = response.data.data;
     var mostReadContent = [];
     var contentids = [];

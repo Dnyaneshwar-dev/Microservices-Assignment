@@ -1,0 +1,70 @@
+version: '3.8'
+
+services:
+  nginx:
+    build:
+      context: ./nginx
+    container_name: proxy
+    hostname: nginx
+    ports:
+        - "80:80" 
+    depends_on:
+        - aggregator-service
+        
+  content-db:
+    image: 'mongo:focal'
+    container_name: content-db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: host
+    volumes:
+      - content-db-data:/data/db 
+    restart: always
+
+  user-interaction-db:
+    image: 'mongo:focal'
+    container_name: user-interaction-db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: host
+    volumes:
+      - user-interaction-db-data:/data/db
+    restart: always
+  
+  users-db:
+    image: 'mongo:focal'
+    container_name: users-db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: host
+    volumes:
+    - users-db-data:/data/db
+    restart: always
+
+  aggregator-service:
+    build: ./aggregator-service
+    ports:
+      - 5000:5000
+
+  content-service:
+    build: ./content-service
+    depends_on:
+      - content-db
+
+  user-interaction-service:
+    build: ./user-interaction-service
+    depends_on:
+      - user-interaction-db
+
+  users-service:
+    build: ./user-service
+    depends_on:
+      - users-db
+
+volumes:
+  content-db-data:
+  user-interaction-db-data:
+  users-db-data:
+
+
+  

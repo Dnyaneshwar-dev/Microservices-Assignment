@@ -4,7 +4,6 @@ const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser");
 
 const { interactionSchema } = require("./schema/interactions");
-const { checkAuth } = require("./middlewares/auth");
 
 const db = mongoose.createConnection(process.env.DATABASE_URL, {
   useNewUrlParser: true,

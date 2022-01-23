@@ -54,7 +54,7 @@ app.post("/users/new", async (req, res) => {
   }
 });
 
-app.put("/users/update", checkAuth, async (req, res, next) => {
+app.put("/users/update", async (req, res, next) => {
   const userData = req.body;
   const User = db.model("users", userSchema);
 

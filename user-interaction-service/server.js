@@ -1,6 +1,8 @@
 require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
+const cookieParser = require("cookie-parser");
+
 const { interactionSchema } = require("./schema/interactions");
 const { checkAuth } = require("./middlewares/auth");
 
@@ -12,6 +14,7 @@ const db = mongoose.createConnection(process.env.DATABASE_URL, {
 const app = express();
 
 app.use(express.json());
+app.use(cookieParser());
 
 const PORT = process.env.PORT || 6000;
 

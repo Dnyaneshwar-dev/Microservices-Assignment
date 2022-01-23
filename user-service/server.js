@@ -148,6 +148,9 @@ app.post("/users/auth", checkAuth, async (req, res) => {
     ok: true,
     message: "Login Verified",
   });
+  const response = await axios.post("http://localhost:7000/users/auth", {
+    headers: {},
+  });
 });
 
 app.listen(PORT, () => {

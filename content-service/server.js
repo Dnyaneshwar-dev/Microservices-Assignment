@@ -4,7 +4,8 @@ const mongoose = require("mongoose");
 const multer = require("multer");
 const csv = require("csvtojson");
 const path = require("path");
-const axios = require("axios");
+const { contentSchema } = require("./schema/content");
+const { interactionSchema } = require("./schema/interactions");
 
 const storage = multer.diskStorage({
   destination(req, file, cb) {
@@ -16,12 +17,18 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage: storage });
 
-const { contentSchema } = require("./schema/content");
-
 const db = mongoose.createConnection(process.env.DATABASE_URL, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
+
+const interactiondb = mongoose.createConnection(
+  process.env.INTERACTION_DATABASE_URL,
+  {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  }
+);
 
 const app = express();
 
@@ -100,13 +107,14 @@ app.get("/content/recent", async (req, res) => {
   }
 });
 
+// most read content
+
 app.get("/content/mostliked", async (req, res) => {
   const content = db.model("content", contentSchema);
+  const interactions = interactiondb.model("interactions", interactionSchema);
+
   try {
-    const response = await axios.get(
-      "http://user-interaction-service:6000/content/mostliked"
-    );
-    const data = response.data.data;
+    const data = await interactions.find({}, "contentid").sort({ likes: -1 });
     var mostLikedContent = [];
     var contentids = [];
     for (let index = 0; index < data.length; index++) {
@@ -138,11 +146,10 @@ app.get("/content/mostliked", async (req, res) => {
 // most read content
 app.get("/content/mostread", async (req, res) => {
   const content = db.model("content", contentSchema);
+  const interactions = interactiondb.model("interactions", interactionSchema);
+
   try {
-    const response = await axios.get(
-      "http://user-interaction-service:6000/content/mostread"
-    );
-    const data = response.data.data;
+    const data = await interactions.find({}, "contentid").sort({ reads: -1 });
     var mostReadContent = [];
     var contentids = [];
     for (let index = 0; index < data.length; index++) {

@@ -1,6 +1,7 @@
 require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
+const cors = require("cors");
 const cookieParser = require("cookie-parser");
 
 const { interactionSchema } = require("./schema/interactions");
@@ -12,10 +13,11 @@ const db = mongoose.createConnection(process.env.DATABASE_URL, {
 
 const app = express();
 
+app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
 
-const PORT = process.env.PORT || 6000;
+const PORT = process.env.PORT || 4000;
 
 // Like event by user
 app.post("/content/like", async (req, res) => {
@@ -62,43 +64,6 @@ app.post("/content/read", async (req, res) => {
     res.json({
       ok: false,
       message: "Read count updated successfully to content",
-    });
-  }
-});
-
-// most read content
-app.get("/content/mostread", async (req, res) => {
-  const interactions = db.model("interactions", interactionSchema);
-  try {
-    const data = await interactions.find({}, "contentid").sort({ reads: -1 });
-    res.json({
-      ok: true,
-      message: "content added successfully",
-      data: data,
-    });
-  } catch (error) {
-    res.json({
-      ok: false,
-      message: error,
-    });
-  }
-});
-
-// most liked content
-app.get("/content/mostliked", async (req, res) => {
-  const { contentid } = req.body;
-  const interactions = db.model("interactions", interactionSchema);
-  try {
-    const data = await interactions.find({}, "contentid").sort({ likes: -1 });
-    res.json({
-      ok: true,
-      message: "content added successfully",
-      data: data,
-    });
-  } catch (error) {
-    res.json({
-      ok: false,
-      message: error,
     });
   }
 });

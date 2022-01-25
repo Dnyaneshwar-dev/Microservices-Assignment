@@ -8,52 +8,52 @@ const app = express();
 app.use(express.json());
 app.use(cookieParser());
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 3000;
 app.get("/hi", (req, res) => {
-  res.send("hi");
+  res.send(process.env.CONTENT_SERVICE);
 });
 // User Interaction Servic API's
-app.post("/content/like", checkAuth, async (req, res) => {
-  res.redirect(307, "http://user-interaction-service:6000/content/like");
+app.post("/content/like", async (req, res) => {
+  res.redirect(307, "http://localhost:6000/content/like");
 });
 
-app.post("/content/read", checkAuth, async (req, res) => {
-  res.redirect(307, "http://user-interaction-service:6000/content/read");
+app.post("/content/read", async (req, res) => {
+  res.redirect(307, "http://localhost:6000/content/read");
 });
 
 // content-service API's
 app.post("/content/new", async (req, res) => {
-  res.redirect(307, "http://content-service:5000/content/new");
+  res.redirect(307, `http://localhost:5000/content/new`);
 });
 
 app.post("/content/newupload", async (req, res) => {
-  res.redirect(307, "http://content-service:5000/content/newupload");
+  res.redirect(307, "http://localhost:5000/content/newupload");
 });
 
 app.get("/content/mostliked", async (req, res) => {
-  res.redirect(307, "http://content-service:5000/content/mostliked");
+  res.redirect(302, "http://localhost:5000/content/mostliked");
 });
 
 app.get("/content/mostread", async (req, res) => {
-  res.redirect(307, "http://content-service:5000/content/mostread");
+  res.redirect(302, "http://localhost:5000/content/mostread");
 });
 
 // user service API's
 
 app.post("/users/new", async (req, res) => {
-  res.redirect(307, "http://user-service:7000/users/new");
+  res.redirect(307, "http://localhost:7000/users/new");
 });
 
 app.put("/users/update", checkAuth, async (req, res, next) => {
-  res.redirect(307, "http://user-service:7000/users/update");
+  res.redirect(307, "http://localhost:7000/users/update");
 });
 
 app.delete("/users/delete", checkAuth, async (req, res) => {
-  res.redirect(307, "http://user-service:7000/users/delete");
+  res.redirect(307, "http://localhost:7000/users/delete");
 });
 
 app.post("/users/login", async (req, res) => {
-  res.redirect(307, "http://user-service:7000/users/login");
+  res.redirect(307, "http://localhost:7000/users/login");
 });
 
 app.listen(PORT, () => {

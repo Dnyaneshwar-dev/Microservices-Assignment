@@ -55,7 +55,7 @@ app.post("/users/new", async (req, res) => {
 });
 
 app.put("/users/update", async (req, res, next) => {
-  const userData = req.body;
+  var userData = req.body;
   const User = db.model("users", userSchema);
 
   try {

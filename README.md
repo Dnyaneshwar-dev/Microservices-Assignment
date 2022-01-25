@@ -15,3 +15,9 @@ Run using Docker
 ```
 docker-compose up
 ```
+
+
+### Tools Used
+  - Node.js
+  - MongoDB
+  - Express.js

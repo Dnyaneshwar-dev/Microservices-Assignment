@@ -13,12 +13,12 @@ app.get("/hi", (req, res) => {
   res.send(process.env.CONTENT_SERVICE);
 });
 // User Interaction Servic API's
-app.post("/content/like", async (req, res) => {
-  res.redirect(307, "http://localhost:6000/content/like");
+app.post("/content/like", checkAuth, async (req, res) => {
+  res.redirect(307, "http://localhost:4000/content/like");
 });
 
-app.post("/content/read", async (req, res) => {
-  res.redirect(307, "http://localhost:6000/content/read");
+app.post("/content/read", checkAuth, async (req, res) => {
+  res.redirect(307, "http://localhost:4000/content/read");
 });
 
 // content-service API's
@@ -39,7 +39,6 @@ app.get("/content/mostread", async (req, res) => {
 });
 
 // user service API's
-
 app.post("/users/new", async (req, res) => {
   res.redirect(307, "http://localhost:7000/users/new");
 });

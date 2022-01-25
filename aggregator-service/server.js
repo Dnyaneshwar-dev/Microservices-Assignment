@@ -12,6 +12,7 @@ const PORT = process.env.PORT || 3000;
 app.get("/hi", (req, res) => {
   res.send(process.env.CONTENT_SERVICE);
 });
+
 // User Interaction Servic API's
 app.post("/content/like", checkAuth, async (req, res) => {
   res.redirect(307, "http://localhost:4000/content/like");
@@ -36,6 +37,10 @@ app.get("/content/mostliked", async (req, res) => {
 
 app.get("/content/mostread", async (req, res) => {
   res.redirect(302, "http://localhost:5000/content/mostread");
+});
+
+app.get("/content/recent", async (req, res) => {
+  res.redirect(302, "http://localhost:5000/content/recent");
 });
 
 // user service API's

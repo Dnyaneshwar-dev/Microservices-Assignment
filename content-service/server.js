@@ -114,14 +114,20 @@ app.get("/content/mostliked", async (req, res) => {
   const interactions = interactiondb.model("interactions", interactionSchema);
 
   try {
-    const data = await interactions.find({}, "contentid").sort({ likes: -1 });
+    const data = await interactions.find({}).sort({ likes: -1 });
     var mostLikedContent = [];
     var contentids = [];
     for (let index = 0; index < data.length; index++) {
-      const contentData = await content.findOne({
+      var contentData = await content.findOne({
         contentid: data[index].contentid,
       });
-      if (contentData != null) mostLikedContent.push(contentData);
+      if (contentData != null) {
+        mostLikedContent.push({
+          contentData,
+          reads: data[index].reads,
+          likes: data[index].likes,
+        });
+      }
       contentids.push(data[index].contentid);
     }
 
@@ -130,9 +136,16 @@ app.get("/content/mostliked", async (req, res) => {
         contentid: { $nin: [...contentids] },
       })
       .sort({ published_date: -1 });
+    for (let index = 0; index < otherContent.length; index++) {
+      mostLikedContent.push({
+        contentData: otherContent[index],
+        reads: 0,
+        likes: 0,
+      });
+    }
     res.send({
       ok: true,
-      data: mostLikedContent.concat(otherContent),
+      data: mostLikedContent,
     });
   } catch (error) {
     console.log(error);
@@ -149,26 +162,40 @@ app.get("/content/mostread", async (req, res) => {
   const interactions = interactiondb.model("interactions", interactionSchema);
 
   try {
-    const data = await interactions.find({}, "contentid").sort({ reads: -1 });
+    const data = await interactions.find({}).sort({ reads: -1 });
     var mostReadContent = [];
     var contentids = [];
     for (let index = 0; index < data.length; index++) {
-      const contentData = await content.findOne({
+      var contentData = await content.findOne({
         contentid: data[index].contentid,
       });
-      if (contentData != null) mostReadContent.push(contentData);
-      contentids.push(data[index].contentid);
-    }
+      if (contentData != null) {
+        mostReadContent.push({
+          contentData,
+          reads: data[index].reads,
+          likes: data[index].likes,
+        });
+        contentids.push(data[index].contentid);
+      }
 
-    const otherContent = await content
-      .find({
-        contentid: { $nin: [...contentids] },
-      })
-      .sort({ published_date: -1 });
-    res.send({
-      ok: true,
-      data: mostReadContent.concat(otherContent),
-    });
+      const otherContent = await content
+        .find({
+          contentid: { $nin: [...contentids] },
+        })
+        .sort({ published_date: -1 });
+
+      for (let index = 0; index < otherContent.length; index++) {
+        mostReadContent.push({
+          contentData: otherContent[index],
+          reads: 0,
+          likes: 0,
+        });
+      }
+      res.send({
+        ok: true,
+        data: mostReadContent,
+      });
+    }
   } catch (error) {
     console.log(error);
     res.send({
